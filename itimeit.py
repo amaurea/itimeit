@@ -1,9 +1,16 @@
 # coding=utf-8
 """An implementation of ipython's magic timeit command for plain python"""
+from __future__ import print_function
 import time, inspect, gc, math
+# Make it work with both python2 and python3 without wasting
+# potentially large amounts of memory
+try: xrange
+except NameError: xrange = range
 
 template = """def itimeit_core():
 	import time
+	try: xrange
+	except NameError: xrange = range
 	%(setup)s
 	t1 = time.time()
 	for i in xrange(%(niter)d):
@@ -14,6 +21,8 @@ template = """def itimeit_core():
 
 template_with_base = """def itimeit_core():
 	import time
+	try: xrange
+	except NameError: xrange = range
 	%(setup)s
 	t1 = time.time()
 	for i in xrange(%(niter)d):
@@ -98,7 +107,7 @@ def itimeit(command="pass", setup="pass", baseline=None, locs="caller",
 			code = compile(template_with_base % params, "<itimeit>", "exec")
 		else:
 			code = compile(template % params, "<itimeit>", "exec")
-		exec code in globs, locs
+		exec(code, globs, locs)
 		return locs["itimeit_core"]
 	# Turn off garbage collection during timing
 	gc_was_enabled = gc.isenabled()
@@ -131,8 +140,8 @@ def itimeit(command="pass", setup="pass", baseline=None, locs="caller",
 	if "p" in mode:
 		# Print result
 		time_desc = format_si(time_per)
-		print u"%d loop%s, best of %d: %ss per loop" % (
-			niter, "" if niter == 1 else "s", repeat, time_desc)
+		print(u"%d loop%s, best of %d: %ss per loop" % (
+			niter, "" if niter == 1 else "s", repeat, time_desc))
 	if "r" in mode:
 		return {"times": times, "niter": niter, "repeat": repeat,
 			"time_per": time_per}
