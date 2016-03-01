@@ -1,4 +1,4 @@
-itimeit - Ipython-like %timeit outside of ipython
+itimeit: Ipython-like %timeit outside of ipython
 =================================================
 
 Use just like the magic %timeit in Ipython
