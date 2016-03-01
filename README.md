@@ -3,6 +3,7 @@ itimeit - Ipython-like %timeit outside of ipython
 
 Use just like the magic %timeit in Ipython
 
+    >from itimeit import itimeit
     >itimeit("1+1")
     10000000 loops, best of 3: 21.03 ns per loop
 
